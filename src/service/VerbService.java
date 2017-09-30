@@ -127,7 +127,7 @@ public class VerbService {
 
         while (verbListIterator.hasNext()){
             Verb verb = (Verb) verbListIterator.next();
-            if (verb.getVerb().equalsIgnoreCase(inputVerb.getVerb())){
+            if (verb.getVerb().equalsIgnoreCase(inputVerb.getCorrectVerb())){
                 verbListIterator.remove();
             }
         }

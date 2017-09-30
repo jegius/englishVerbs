@@ -2,25 +2,23 @@ package commands.randomlimitedverb;
 
 import Utils.MenuUtils;
 import commands.Command;
-import commands.ExitCommand;
 import commands.MainMenu;
-import commands.randominfinityverbs.RandomInfinityVerbsCommand;
 import holder.VerbHolder;
 import models.Verb;
 import service.VerbService;
 
 import java.util.Scanner;
 
-public class RandomLimitedCommand implements Command{
-    private static RandomLimitedCommand instance;
+public class RandomLimitedVerbsCommand implements Command {
+    private static RandomLimitedVerbsCommand instance;
     private Verb inputVerb;
 
-    private RandomLimitedCommand() {
+    private RandomLimitedVerbsCommand() {
     }
 
-    public static synchronized RandomLimitedCommand getInstance() {
+    public static synchronized RandomLimitedVerbsCommand getInstance() {
         if (instance == null) {
-            instance = new RandomLimitedCommand();
+            instance = new RandomLimitedVerbsCommand();
 
         }
         return instance;
@@ -34,11 +32,12 @@ public class RandomLimitedCommand implements Command{
 
         if (inputVerb == null) {
             Verb nextVerb = verbService.getNextRandomVerb();
-            if (nextVerb == null){
+            if (nextVerb == null) {
                 System.out.println("В базе закончились глаголы.");
                 MenuUtils.printSeparator();
                 MenuUtils.printOption("1", "Для перезагрузки базы.");
                 MenuUtils.printOption("2", "Для выхода в главное меню.");
+                MenuUtils.printOption("3", "Показать результаты");
                 MenuUtils.printSeparator();
 
                 int choice = scanner.nextInt();
@@ -48,6 +47,9 @@ public class RandomLimitedCommand implements Command{
                         return this;
                     case 2:
                         return MainMenu.getInstance();
+                    case 3:
+                        verbService.showErrors();
+                        return this;
                     default:
                         System.out.println("Неверная команда!");
                         return this;
@@ -77,19 +79,23 @@ public class RandomLimitedCommand implements Command{
             MenuUtils.printSeparator();
             MenuUtils.printOption("Выход из режима введите", "0");
             MenuUtils.printOption("Показ результата", "1");
+            MenuUtils.printSeparator();
+            String chose = scanner.nextLine();
+
+            if (chose.equals("0")) {
+                verbService.resetVerbs();
+                return MainMenu.getInstance();
+            } else if (chose.equals("1")) {
+                verbService.showErrors();
+
+            }
+            verbService.showResultAndRemoveCurrentVerbFromHolder(inputVerb);
+            inputVerb = null;
+            MenuUtils.printSeparator();
             MenuUtils.printOption("Осталось глаголов", "" + VerbHolder.getVerbHolder().getVerbsCount());
             MenuUtils.printOption("Верных глаголов", "" + VerbService.getVerbService().getCorrectVerbs().size());
             MenuUtils.printOption("Не верных глаголов", "" + VerbService.getVerbService().getIncorrectVerbs().size());
             MenuUtils.printSeparator();
-            String chose = scanner.nextLine();
-            if (chose.equals("0")) {
-                verbService.resetVerbs();
-                return MainMenu.getInstance();
-            } else if (chose.equals("1")){
-                verbService.showErrors();
-            }
-            verbService.showResultAndRemoveCurrentVerbFromHolder(inputVerb);
-            inputVerb = null;
         }
         return this;
     }
