@@ -1,16 +1,20 @@
 package models;
 
 public class Verb {
+    public static final String HEADER_ONE = "Глагол: ";
+    public static final String HEADER_TWO = "Past Simple: ";
+    public static final String HEADER_THREE = "Past Participle: ";
+
+
     private String verb;
     private String pastSimple;
     private String pastParticiple;
     private String translate;
     private long group;
 
-    private boolean verbIsCorrect;
-    private boolean pastSimpleIsCorrect;
-    private boolean pastParticipleIsCorrect;
-    private boolean translateIsCorrect;
+    private String correctVerb;
+    private String correctPastSimple;
+    private String correctPastParticiple;
 
     public Verb() {
     }
@@ -63,35 +67,27 @@ public class Verb {
         this.translate = translate;
     }
 
-    public boolean isVerbIsCorrect() {
-        return verbIsCorrect;
+    public String getCorrectVerb() {
+        return correctVerb;
     }
 
-    public void setVerbIsCorrect(boolean verbIsCorrect) {
-        this.verbIsCorrect = verbIsCorrect;
+    public void setCorrectVerb(String correctVerb) {
+        this.correctVerb = correctVerb;
     }
 
-    public boolean isPastSimpleIsCorrect() {
-        return pastSimpleIsCorrect;
+    public String getCorrectPastSimple() {
+        return correctPastSimple;
     }
 
-    public void setPastSimpleIsCorrect(boolean pastSimpleIsCorrect) {
-        this.pastSimpleIsCorrect = pastSimpleIsCorrect;
+    public void setCorrectPastSimple(String correctPastSimple) {
+        this.correctPastSimple = correctPastSimple;
     }
 
-    public boolean isPastParticipleIsCorrect() {
-        return pastParticipleIsCorrect;
+    public String getCorrectPastParticiple() {
+        return correctPastParticiple;
     }
 
-    public void setPastParticipleIsCorrect(boolean pastParticipleIsCorrect) {
-        this.pastParticipleIsCorrect = pastParticipleIsCorrect;
-    }
-
-    public boolean isTranslateIsCorrect() {
-        return translateIsCorrect;
-    }
-
-    public void setTranslateIsCorrect(boolean translateIsCorrect) {
-        this.translateIsCorrect = translateIsCorrect;
+    public void setCorrectPastParticiple(String correctPastParticiple) {
+        this.correctPastParticiple = correctPastParticiple;
     }
 }

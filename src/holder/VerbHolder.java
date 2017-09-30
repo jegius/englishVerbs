@@ -57,7 +57,7 @@ public class VerbHolder {
         verbs.add(new Verb("feel", "felt", "felt", "чувствовать", 4));
         verbs.add(new Verb("fight", "fought", "fought", "бороться", 4));
         verbs.add(new Verb("find", "found", "found", "находить", 4));
-        verbs.add(new Verb("get", "got", "got", "замерзать", 4));
+        verbs.add(new Verb("get", "got", "got", "получать", 4));
 
         verbs.add(new Verb("choose", "chose", "chosen", "выбирать", 5));
         verbs.add(new Verb("beat", "beat", "beaten", "бить", 5));
