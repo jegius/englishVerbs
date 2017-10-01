@@ -52,6 +52,17 @@ public class LimitedVerbOnGroup implements Command {
             String nextString = scanner.nextLine();
             inputVerb.setPastParticiple(nextString);
         } else {
+            MenuUtils.printSeparator();
+            MenuUtils.printOption("Выход из режима введите", "0");
+            MenuUtils.printOption("Показ результата", "1");
+            MenuUtils.printSeparator();
+            String chose = scanner.nextLine();
+            if (chose.equals("0")) {
+                verbService.resetVerbs();
+                return MainMenu.getInstance();
+            } else if (chose.equals("1")){
+                verbService.showErrors();
+            }
             verbService.showResult(inputVerb);
             inputVerb = null;
         }

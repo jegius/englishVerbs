@@ -6,10 +6,7 @@ import models.Verb;
 import models.VerbGroup;
 
 import javax.swing.plaf.PanelUI;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class VerbService {
     private static VerbService verbService;
@@ -50,7 +47,7 @@ public class VerbService {
             return returnVerbAndRemoveFromGroup();
         } else {
             currentGroup = holder.getVerbGroupById(holder.getRandomVerbGroupId());
-            return currentGroup.getVerbList().get(RANDOM.nextInt(currentGroup.getVerbList().size()));
+            return returnVerbAndRemoveFromGroup();
         }
     }
 
@@ -73,7 +70,7 @@ public class VerbService {
         while (iterator.hasNext()){
             Verb thisVerb = (Verb) iterator.next();
 
-            if (thisVerb.getGroup() == newVerb.getGroup()){
+            if (thisVerb.getTranslate().equalsIgnoreCase(newVerb.getTranslate())){
                 iterator.remove();
             }
         }
