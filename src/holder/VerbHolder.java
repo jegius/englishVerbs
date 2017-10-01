@@ -1,36 +1,115 @@
 package holder;
 
 import models.Verb;
+import models.VerbGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class VerbHolder {
     private static VerbHolder verbHolder;
     private List<Verb> verbs;
+    private List<VerbGroup> verbsInGroup;
 
-    public static synchronized VerbHolder getVerbHolder(){
-        if (verbHolder == null){
+    public static synchronized VerbHolder getVerbHolder() {
+        if (verbHolder == null) {
             verbHolder = new VerbHolder();
         }
         return verbHolder;
     }
 
     private VerbHolder() {
-        if (verbs == null){
-            verbs = initVerbs();
+
+        verbs = initVerbs();
+        verbsInGroup = sortVerbsOnGroup();
+
+    }
+
+    private List<VerbGroup> sortVerbsOnGroup() {
+        List<VerbGroup> verbGroups = new ArrayList<>();
+        for (Verb verb : verbs) {
+            if (verbGroups.size() == 0) {
+                verbGroups.add(createNewVerbGroup(verb));
+            } else {
+                verbGroups = checkContainsAndAddIfNeeded(verb, verbGroups);
+            }
         }
+        return verbGroups;
+    }
+
+    public List<VerbGroup> getVerbsInGroup() {
+        return verbsInGroup;
+    }
+
+    public VerbGroup getVerbGroupById(long id) {
+        for (VerbGroup verbGroup : verbsInGroup) {
+            if (verbGroup.getVerbGroup() == id) {
+                if (verbGroup.getVerbList().size() != 0) {
+                    return verbGroup;
+                } else {
+                  verbsInGroup = sortVerbsOnGroup();
+                  return getVerbGroupById(id);
+                }
+
+            }
+        }
+        return null;
+    }
+
+    public int getVerbGroupListSize() {
+        return verbsInGroup.size();
+    }
+
+    public void resetVerbGroups() {
+        refreshArray();
+        sortVerbsOnGroup();
+    }
+
+    private List<VerbGroup> checkContainsAndAddIfNeeded(Verb verb, List<VerbGroup> verbGroups) {
+        if (isGroupOnExisting(verb, verbGroups)) {
+            addVerbOnExistingVerbGroup(verb, verbGroups);
+        } else {
+            verbGroups.add(createNewVerbGroup(verb));
+        }
+
+        return verbGroups;
+    }
+
+    private void addVerbOnExistingVerbGroup(Verb verb, List<VerbGroup> verbGroups) {
+        for (VerbGroup verbGroup : verbGroups) {
+            if (verbGroup.getVerbGroup() == verb.getGroup()) {
+                verbGroup.getVerbList().add(verb);
+            }
+        }
+    }
+
+    private boolean isGroupOnExisting(Verb verb, List<VerbGroup> verbGroups) {
+        for (VerbGroup verbGroup : verbGroups) {
+            if (verbGroup.getVerbGroup() == verb.getGroup()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private VerbGroup createNewVerbGroup(Verb verb) {
+        VerbGroup verbGroup = new VerbGroup();
+        verbGroup.setVerbGroup(verb.getGroup());
+        verbGroup.addNewVerb(verb);
+
+        return verbGroup;
     }
 
     public List<Verb> getVerbs() {
         return verbs;
     }
 
-    public int getVerbsCount(){
+    public int getVerbsCount() {
         return verbs.size();
     }
 
-    public void refreshArray(){
+    public void refreshArray() {
         verbs = initVerbs();
     }
 
@@ -81,4 +160,7 @@ public class VerbHolder {
         return verbs;
     }
 
+    public long getRandomVerbGroupId() {
+        return verbsInGroup.get(new Random().nextInt(verbsInGroup.size())).getVerbGroup();
+    }
 }

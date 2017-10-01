@@ -3,7 +3,9 @@ package service;
 import Utils.MenuUtils;
 import holder.VerbHolder;
 import models.Verb;
+import models.VerbGroup;
 
+import javax.swing.plaf.PanelUI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +18,7 @@ public class VerbService {
 
     private List<Verb> correctVerbs;
     private List<Verb> incorrectVerbs;
+    private VerbGroup currentGroup;
 
     public static synchronized VerbService getVerbService() {
         if (verbService == null) {
@@ -40,6 +43,40 @@ public class VerbService {
 
     public Verb getNextRandomVerb() {
         return holder.getVerbs().size() != 0 ? holder.getVerbs().get(RANDOM.nextInt(holder.getVerbsCount())) : null;
+    }
+
+    public Verb getVerbByGroup() {
+        if (currentGroup != null) {
+            return returnVerbAndRemoveFromGroup();
+        } else {
+            currentGroup = holder.getVerbGroupById(holder.getRandomVerbGroupId());
+            return currentGroup.getVerbList().get(RANDOM.nextInt(currentGroup.getVerbList().size()));
+        }
+    }
+
+    private Verb returnVerbAndRemoveFromGroup() {
+        Verb newVerb;
+        if (currentGroup.getVerbList().size() != 0){
+            newVerb = currentGroup.getVerbList().get(RANDOM.nextInt(currentGroup.getVerbList().size()));
+            removeVerbFromCurrentVerbList(newVerb);
+
+        } else {
+            currentGroup = null;
+            newVerb = getVerbByGroup();
+        }
+        return newVerb;
+    }
+
+    private void removeVerbFromCurrentVerbList(Verb newVerb) {
+        Iterator iterator = currentGroup.getVerbList().iterator();
+
+        while (iterator.hasNext()){
+            Verb thisVerb = (Verb) iterator.next();
+
+            if (thisVerb.getGroup() == newVerb.getGroup()){
+                iterator.remove();
+            }
+        }
     }
 
     public void showResult(Verb inputVerb) {
@@ -125,9 +162,9 @@ public class VerbService {
     private void removeVerbFromHolder(Verb inputVerb) {
         Iterator verbListIterator = VerbHolder.getVerbHolder().getVerbs().iterator();
 
-        while (verbListIterator.hasNext()){
+        while (verbListIterator.hasNext()) {
             Verb verb = (Verb) verbListIterator.next();
-            if (verb.getVerb().equalsIgnoreCase(inputVerb.getCorrectVerb())){
+            if (verb.getVerb().equalsIgnoreCase(inputVerb.getCorrectVerb())) {
                 verbListIterator.remove();
             }
         }
