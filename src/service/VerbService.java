@@ -53,9 +53,8 @@ public class VerbService {
 
     private Verb returnVerbAndRemoveFromGroup() {
         Verb newVerb;
-        if (currentGroup.getVerbList().size() != 0){
+        if (currentGroup.getVerbList().size() != 0) {
             newVerb = currentGroup.getVerbList().get(RANDOM.nextInt(currentGroup.getVerbList().size()));
-            removeVerbFromCurrentVerbList(newVerb);
 
         } else {
             currentGroup = null;
@@ -65,12 +64,16 @@ public class VerbService {
     }
 
     private void removeVerbFromCurrentVerbList(Verb newVerb) {
-        Iterator iterator = currentGroup.getVerbList().iterator();
+        List<Verb> thisList = currentGroup == null ? VerbHolder.getVerbHolder().getVerbs() : currentGroup.getVerbList();
+        Iterator iterator = thisList.iterator();
 
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             Verb thisVerb = (Verb) iterator.next();
 
-            if (thisVerb.getTranslate().equalsIgnoreCase(newVerb.getTranslate())){
+            if (newVerb.getVerb().equalsIgnoreCase(newVerb.getCorrectVerb())
+                    && newVerb.getCorrectPastSimple().equalsIgnoreCase(newVerb.getPastSimple())
+                    && newVerb.getCorrectPastParticiple().equalsIgnoreCase(newVerb.getPastParticiple())
+                    && thisVerb.getTranslate().equalsIgnoreCase(newVerb.getTranslate())) {
                 iterator.remove();
             }
         }
@@ -83,17 +86,18 @@ public class VerbService {
                 Verb.HEADER_ONE + " " + inputVerb.getVerb() +
                 (inputVerb.getVerb().equalsIgnoreCase(inputVerb.getCorrectVerb())
                         ? " - Верно\n"
-                        : " Не верно, верная форма - " + inputVerb.getCorrectVerb() + "\n") +
+                        : " Неверно, верная форма - " + inputVerb.getCorrectVerb() + "\n") +
                 Verb.HEADER_TWO + " " + inputVerb.getPastSimple() +
                 (inputVerb.getPastSimple().equalsIgnoreCase(inputVerb.getCorrectPastSimple())
                         ? " - Верно\n"
-                        : " Не верно, верная форма - " + inputVerb.getCorrectPastSimple() + "\n") +
+                        : " Неверно, верная форма - " + inputVerb.getCorrectPastSimple() + "\n") +
                 Verb.HEADER_THREE + " " + inputVerb.getPastParticiple() +
                 (inputVerb.getPastParticiple().equalsIgnoreCase(inputVerb.getCorrectPastParticiple())
                         ? " - Верно\n"
-                        : " Не верно, верная форма - " + inputVerb.getCorrectPastParticiple() + "\n");
+                        : " Неверно, верная форма - " + inputVerb.getCorrectPastParticiple() + "\n");
 
         System.out.printf(resultString + "\n");
+        removeVerbFromCurrentVerbList(inputVerb);
     }
 
     private void addVerbOnTimeHolder(Verb inputVerb) {
@@ -121,7 +125,7 @@ public class VerbService {
         MenuUtils.printSeparator();
         System.out.println("Верные глаголы:");
         printArray(correctVerbs);
-        System.out.println("Не верные глаголы:");
+        System.out.println("Неверные глаголы:");
         printArray(incorrectVerbs);
         MenuUtils.printSeparator();
         System.out.println();
@@ -152,18 +156,10 @@ public class VerbService {
     }
 
     public void showResultAndRemoveCurrentVerbFromHolder(Verb inputVerb) {
-        removeVerbFromHolder(inputVerb);
         showResult(inputVerb);
     }
 
-    private void removeVerbFromHolder(Verb inputVerb) {
-        Iterator verbListIterator = VerbHolder.getVerbHolder().getVerbs().iterator();
-
-        while (verbListIterator.hasNext()) {
-            Verb verb = (Verb) verbListIterator.next();
-            if (verb.getVerb().equalsIgnoreCase(inputVerb.getCorrectVerb())) {
-                verbListIterator.remove();
-            }
-        }
+    public String getVerbsCount() {
+        return String.valueOf(currentGroup.getVerbList().size());
     }
 }

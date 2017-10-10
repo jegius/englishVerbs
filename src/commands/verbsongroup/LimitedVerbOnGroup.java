@@ -52,9 +52,13 @@ public class LimitedVerbOnGroup implements Command {
             String nextString = scanner.nextLine();
             inputVerb.setPastParticiple(nextString);
         } else {
+            verbService.showResult(inputVerb);
+            inputVerb = null;
+
             MenuUtils.printSeparator();
             MenuUtils.printOption("Выход из режима введите", "0");
             MenuUtils.printOption("Показ результата", "1");
+            MenuUtils.printOption("Осталось глаголов в группе", verbService.getVerbsCount());
             MenuUtils.printSeparator();
             String chose = scanner.nextLine();
             if (chose.equals("0")) {
@@ -63,8 +67,6 @@ public class LimitedVerbOnGroup implements Command {
             } else if (chose.equals("1")){
                 verbService.showErrors();
             }
-            verbService.showResult(inputVerb);
-            inputVerb = null;
         }
         return this;
     }
